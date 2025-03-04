@@ -1,0 +1,139 @@
+---
+title: "Append Dragons"
+output: html_document
+date: "2025-03-03"
+---
+
+Jamie Chang 20264333
+Mackenzie calhoun 20265644
+Nithila Sathieskumar 20279386
+Sara Gama 20292893
+Christina Meier 20213829
+Mari Hyde 20261425
+
+https://github.com/marihyde/BIOL432_W8.git
+
+
+```{r, message=FALSE, warning=FALSE}
+library(ggtree)
+library(ape)
+
+```
+
+loading the dragon nexus database: 
+
+```{r}
+
+NexusData<- read.nexus.data("https://raw.githubusercontent.com/ColauttiLab/DragonPhylogeny/refs/heads/master/Data/DragonMatrix.nex")
+
+```
+
+
+
+
+
+Loading the data for our new dragons and making sure its in the correct format, then adding it to the nexus data: 
+
+```{r, warning=FALSE}
+
+Data = read.csv("/Users/marihyde/Desktop/input/Dragon data - Sheet1.csv", colClasses = "character")
+
+NewData = t(Data[, -1])
+
+colnames(NewData) = Data$TRAIT
+
+NewData = data.frame(
+  Strings = apply(NewData, 1, function(x) paste(x, collapse = ""))
+)
+
+
+for (i in 1:nrow(NewData)){
+  str = unlist(strsplit(NewData$Strings[i],""))
+  NexusData[[rownames(NewData)[i]]] = str
+}
+
+```
+
+Applying the weight values to our dragon dataset:
+
+```{r, warning=FALSE}
+WeightsData = read.csv("/Users/marihyde/Desktop/input/Weights.csv")
+
+Weights = paste0(WeightsData$Weight, collapse = "")
+
+Weights = strsplit(Weights, split = "")[[1]]
+
+WeightsValue = rep(NA,length(Weights))
+
+for (i in 1:length(WeightsValue)){
+  if (Weights[i] %in% LETTERS){
+    WeightsValue[i] = which(LETTERS == Weights[i])+9
+  } else {
+    WeightsValue[i] = Weights[i]
+  }
+}
+
+WeightsValue = as.numeric(WeightsValue)
+
+WtNexusData = NexusData
+
+for (i in 1:length(NexusData)){
+  RepWeight = NexusData[[i]]==1
+  WtNexusData[[i]][RepWeight] = WeightsValue[RepWeight]
+  RepWeight = NA
+}
+
+WtNexusDataDF = data.frame(matrix(unlist(WtNexusData), nrow=80, byrow=T))
+
+row.names(WtNexusDataDF) = names(WtNexusData)
+
+WtDist = dist(WtNexusDataDF, method = 'euclidean')
+
+```
+
+
+
+
+## Discovering lost dragons: a phylogenetic analysis of three newly discovered species
+
+Researchers around the world previously thought they had already discovered all possible dragon species. However, our research team came across three fossil remains that after careful analysis we can conclude they are dragon fossils. By integrating these dragons into a previous dragon phylogeny dataset, we were able to elude their evolutionary relationship among other known dragon species. 
+
+
+
+![dragon 1](/Users/marihyde/Desktop/images/dragon 1.jpeg)
+
+Dragon 1:
+no appendages, 1/4 human size, rotund body, long catlike claws, round or small ears, average eyes, forward eye position, small horns, spiny skin (everywhere), blunt snout, spear tail, pointy teeth, regular tongue, no whiskers, full bat like wings
+
+
+![dragon 2](/Users/marihyde/Desktop/images/dragon 2.jpeg)
+
+
+Dragon 2:
+two appendages, 1-2x human size, elongate body, no claws, spear-like ears, average eyes, lateral eye position, medium/long horns, plates skin (everywhere), long snout, spear tail, blunt teeth, regular tongue, no whiskers, full bat like wings. 
+
+![dragon 3](/Users/marihyde/Desktop/images/dragon 3.jpg)
+
+
+Dragon 3:
+six appendages, 3-4x human size, snake-like body, short talon claws, spear-like ears, average eyes, forward eye position, no horns, scaled skin (everywhere), moderate snout, y-shaped tail, fangs and other teeth, regular tongue, long whiskers, and no wings.  
+
+
+
+```{r message=FALSE, fig.cap = "Figure 1: Dragon Phylogeny - Phylogenetic tree of dragon lineages with three dragons of interest; dragon 1 (DRAGON0001) in red, dragon 2 (DRAGON0002) in blue, and dragon 3 (DRAGON0003) in green."}
+WtTree = fastme.bal(WtDist)
+
+Drag1 = MRCA(WtTree, "DRAGON.1")
+Drag2 = MRCA(WtTree, "DRAGON.2")
+Drag3 = MRCA(WtTree, "DRAGON.3")
+
+ggtree(WtTree, layout = 'fan') + geom_tiplab(size=2) + geom_hilight(node = Drag1, fill = "red", alpha = 0.5) + geom_hilight(node = Drag2, fill = "blue", alpha = 0.5) + geom_hilight(node = Drag3, fill = "green", alpha = 0.5) 
+
+
+```
+
+
+Morphological traits like wing structure, horn type, skin thickness and limb lengths were systematically encoded using a weighing system. From here, they were incorporated in phylogenetic trees to determine their evolutionary relationships. We found that Dragon1 was closely related to other Turkish dragons, Dragon2 was closely related to Russian and Japanese dragons, and Dragon3 was closely related to Japanese and Fish related dragons.
+
+Ultimately, these findings challenge the previous notation that all dragon species were already discovered. We hope this information becomes useful for scientists studying dragons.
+
