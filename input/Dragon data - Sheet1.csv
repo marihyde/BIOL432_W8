@@ -1,0 +1,26 @@
+TRAIT,DRAGON 1,DRAGON 2,DRAGON 3
+Appendages,1101,1101,0001
+Mass,0000,0011,0111
+Body Type,00,00,11
+ClawType,1100,0000,0010
+Dorsal Ridges,100000,010000,010100
+Ear Morphology,100,100,010
+Eye Morphology,001,010,100
+Eye Position,100,001,01
+HornType,111,111,001
+NosePos,00,01,1
+Nasal Morphology,10,10,0
+Skin-dorsal,000000,000100,100000
+Skin-head,000000,000110,000000
+Skin-ventral,000001,101000,100000
+SnoutType,1000,1110,1100
+TailType,10,00,00
+Teeth,0011,1100,0001
+OppToes,0,0,1
+Toe Number,100000,111000,000000
+Tongue Length,1,1,0
+Tongue Morphology Type,00,01,10
+Ventral Plates,1,0,1
+Wiskers,00,00,11
+Wing Structure,100,010,00
+WingType,010,001,010
